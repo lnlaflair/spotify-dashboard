@@ -9,6 +9,7 @@ format:
 ## Column {width="35%"}
 
 Placeholder text for Column 1
+
 ```{r, load-packages}
 #| echo: false
 #| include: false
@@ -16,11 +17,9 @@ Placeholder text for Column 1
 library(tidyverse)
 ```
 
-
 ```{r, print-starwars}
 head(starwars)
 ```
-
 
 ## Column {width="65%"}
 

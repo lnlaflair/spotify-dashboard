@@ -14,8 +14,7 @@ website:
 
 format:
   html:
-    theme: cosmo
-    css: styles.css
+    theme: [flatly, custom.scss]
     toc: true
 
 editor: visual
