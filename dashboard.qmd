@@ -15,19 +15,71 @@ Placeholder text for Column 1
 #| include: false
 
 library(tidyverse)
+library(httr2)
 ```
 
-```{r, print-starwars}
-head(starwars)
+
+
+```{r, create-access-token}
+#| echo: false
+#| include: false
+#| 
+# Define client ID and client secret to facilitate Spotify access
+client_id <- Sys.getenv("SPOTIFY_CLIENT_ID")
+client_secret <- Sys.getenv("SPOTIFY_CLIENT_SECRET")
+
+req_access_token <- request("https://accounts.spotify.com/api/token") |> 
+  req_method("POST") |> 
+  req_body_raw(paste0("grant_type=client_credentials&client_id=", 
+                      client_id, 
+                      "&client_secret=",
+                      client_secret
+                      ), "application/x-www-form-urlencoded") |> 
+  req_perform() |> 
+resp_body_json()
+
+spotify_access_token <- req_access_token$access_token
+```
+
+
+```{r, playlist_id}
+
+
+tth <- request("https://api.spotify.com/v1/playlists/37i9dQZF1DXcBWIGoYBM5M") |> 
+  req_method("GET") |> 
+  req_headers(
+    Authorization = paste0("Bearer ", spotify_access_token),
+    ) |>
+  req_perform() |> 
+  resp_body_json()
+
+#Extract track names and artists by calling specific elements
+
+tth$tracks$items[[1]]$track$name
+
+tth$tracks$items[[1]]$track$artists
+
+#Create data frame with top hits information
+top_hits_df <- data.frame(
+    song_name = unlist(lapply(tth$tracks$items, FUN = function(x) {x$track$name})),
+    song_id = unlist(lapply(tth$tracks$items, FUN = function(x) {x$track$id})),
+    artist_name = unlist(lapply(tth$tracks$items, FUN = function(item) {item$track$album$artists[[1]]$name})),
+    album_art = unlist(lapply(tth$tracks$items, FUN = function(item) {item$track$album$images[[1]]$url})),
+    track_duration = unlist(lapply(tth$tracks$items, FUN = function(item) {item$track$duration_ms})),
+    popularity = unlist(lapply(tth$tracks$items, FUN = function(item) {item$track$popularity}))
+)
+
+top_hits_df
+
 ```
 
 ## Column {width="65%"}
 
 ### Row {height="10%"}
+
 ```{r}
 paste0("My username is: ", Sys.getenv("MY_USERNAME"))
 ```
-
 
 Placeholder text for Column 2, Row 1
 
