@@ -24,6 +24,10 @@ head(starwars)
 ## Column {width="65%"}
 
 ### Row {height="10%"}
+```{r}
+paste0("My username is: ", Sys.getenv("MY_USERNAME"))
+```
+
 
 Placeholder text for Column 2, Row 1
 
