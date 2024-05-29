@@ -44,6 +44,8 @@ spotify_access_token <- req_access_token$access_token
 
 ```{r, playlist_id}
 
+#| echo: false
+
 
 tth <- request("https://api.spotify.com/v1/playlists/37i9dQZF1DXcBWIGoYBM5M") |> 
   req_method("GET") |> 
@@ -69,7 +71,7 @@ top_hits_df <- data.frame(
     popularity = unlist(lapply(tth$tracks$items, FUN = function(item) {item$track$popularity}))
 )
 
-top_hits_df
+head(top_hits_df)
 
 ```
 
